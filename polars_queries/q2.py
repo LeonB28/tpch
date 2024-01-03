@@ -1,5 +1,3 @@
-import os
-
 import polars as pl
 
 from polars_queries import utils
@@ -40,7 +38,7 @@ def q():
     ]
 
     q_final = (
-        result_q1.groupby("p_partkey")
+        result_q1.group_by("p_partkey")
         .agg(pl.min("ps_supplycost").alias("ps_supplycost"))
         .join(
             result_q1,
@@ -53,7 +51,7 @@ def q():
             descending=[True, False, False, False],
         )
         .limit(100)
-        .with_columns(pl.col(pl.datatypes.Utf8).str.strip().keep_name())
+        .with_columns(pl.col(pl.datatypes.Utf8).str.strip_chars().name.keep())
     )
 
     utils.run_query(Q_NUM, q_final)

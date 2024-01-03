@@ -22,7 +22,7 @@ def q():
         .join(nation_ds, left_on="c_nationkey", right_on="n_nationkey")
         .filter(pl.col("o_orderdate").is_between(var_1, var_2, closed="left"))
         .filter(pl.col("l_returnflag") == "R")
-        .groupby(
+        .group_by(
             [
                 "c_custkey",
                 "c_name",
@@ -41,7 +41,9 @@ def q():
                 .alias("revenue")
             ]
         )
-        .with_columns(pl.col("c_address").str.strip(), pl.col("c_comment").str.strip())
+        .with_columns(
+            pl.col("c_address").str.strip_chars(), pl.col("c_comment").str.strip_chars()
+        )
         .select(
             [
                 "c_custkey",
